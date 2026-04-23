@@ -61,6 +61,8 @@ extern ADC_HandleTypeDef   hadc1;
 extern FDCAN_HandleTypeDef hfdcan1;
 extern FDCAN_HandleTypeDef hfdcan2;
 extern FDCAN_HandleTypeDef hfdcan3;
+extern DMA_HandleTypeDef   hdma_i2c2_rx;
+extern I2C_HandleTypeDef   hi2c2;
 extern MDMA_HandleTypeDef  hmdma_octospi2_fifo_th;
 extern OSPI_HandleTypeDef  hospi2;
 extern DMA_HandleTypeDef   hdma_spi2_rx;
@@ -399,6 +401,20 @@ void FDCAN2_IT1_IRQHandler(void)
 }
 
 /**
+ * @brief This function handles I2C2 event interrupt.
+ */
+void I2C2_EV_IRQHandler(void)
+{
+    /* USER CODE BEGIN I2C2_EV_IRQn 0 */
+
+    /* USER CODE END I2C2_EV_IRQn 0 */
+    HAL_I2C_EV_IRQHandler(&hi2c2);
+    /* USER CODE BEGIN I2C2_EV_IRQn 1 */
+
+    /* USER CODE END I2C2_EV_IRQn 1 */
+}
+
+/**
  * @brief This function handles SPI2 global interrupt.
  */
 void SPI2_IRQHandler(void)
@@ -578,6 +594,20 @@ void DMA2_Stream6_IRQHandler(void)
     /* USER CODE BEGIN DMA2_Stream6_IRQn 1 */
 
     /* USER CODE END DMA2_Stream6_IRQn 1 */
+}
+
+/**
+ * @brief This function handles DMA2 stream7 global interrupt.
+ */
+void DMA2_Stream7_IRQHandler(void)
+{
+    /* USER CODE BEGIN DMA2_Stream7_IRQn 0 */
+
+    /* USER CODE END DMA2_Stream7_IRQn 0 */
+    HAL_DMA_IRQHandler(&hdma_i2c2_rx);
+    /* USER CODE BEGIN DMA2_Stream7_IRQn 1 */
+
+    /* USER CODE END DMA2_Stream7_IRQn 1 */
 }
 
 /**

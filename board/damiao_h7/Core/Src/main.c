@@ -25,6 +25,7 @@
 #include "dma.h"
 #include "fdcan.h"
 #include "fmac.h"
+#include "i2c.h"
 #include "iwdg.h"
 #include "mdma.h"
 #include "octospi.h"
@@ -144,8 +145,9 @@ int main(void)
     MX_UART5_Init();
     MX_RNG_Init();
     MX_SPI6_Init();
-    // MX_IWDG1_Init();
+    //MX_IWDG1_Init();
     MX_USB_DEVICE_Init();
+    MX_I2C2_Init();
     /* USER CODE BEGIN 2 */
     tx_kernel_enter();
     /* USER CODE END 2 */
