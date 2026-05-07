@@ -73,7 +73,7 @@ set(DISABLEFLOAT16 ON CACHE BOOL "Disable float16 kernels (not needed for M7)" F
 add_subdirectory(../../CMSIS-DSP ${CMAKE_CURRENT_BINARY_DIR}/cmsisdsp)
 
 # Apply compiler flags to CMSIS-DSP
-target_compile_options(CMSISDSP PRIVATE -O3 -ffast-math -fno-math-errno)
+target_compile_options(CMSISDSP PRIVATE -O3 -ffast-math -fno-math-errno -flto)
 # Provide CMSIS-Core headers (cmsis_compiler.h) to CMSIS-DSP
 target_include_directories(CMSISDSP PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Drivers/CMSIS/Include)
 
@@ -111,3 +111,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     cherryusb
     # Add user defined libraries
 )
+
+# Enable LTO at link stage (required for -flto compiled objects)
+target_link_options(${CMAKE_PROJECT_NAME} PRIVATE -flto)
