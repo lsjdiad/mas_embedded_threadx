@@ -21,6 +21,23 @@
 #define BSP_CAN_BUS_NUM 2
 #endif
 
+/* CAN HAL 句柄宏定义 */
+#if defined(STM32H723xx)
+#define BSP_CAN_HANDLE1       &hfdcan1
+#define BSP_CAN_HANDLE2       &hfdcan2
+#define BSP_CAN_HANDLE3       &hfdcan3
+#define BSP_CAN_IS_HANDLE1(p) ((p) == BSP_CAN_HANDLE1)
+#define BSP_CAN_IS_HANDLE2(p) ((p) == BSP_CAN_HANDLE2)
+#define BSP_CAN_IS_HANDLE3(p) ((p) == BSP_CAN_HANDLE3)
+#elif defined(STM32F407xx)
+#define BSP_CAN_HANDLE1       &hcan1
+#define BSP_CAN_HANDLE2       &hcan2
+#define BSP_CAN_HANDLE3       NULL
+#define BSP_CAN_IS_HANDLE1(p) ((p) == BSP_CAN_HANDLE1)
+#define BSP_CAN_IS_HANDLE2(p) ((p) == BSP_CAN_HANDLE2)
+#define BSP_CAN_IS_HANDLE3(p) (0)
+#endif
+
 #define BSP_CAN_RX_FIFO_SIZE    8
 #define BSP_CAN_TX_FIFO_SIZE    8
 #define BSP_CAN_MAX_DEV_PER_BUS 8
