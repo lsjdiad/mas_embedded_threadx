@@ -84,7 +84,7 @@ void Module_BoardComm_Init(void)
     LOG_I("BoardComm initialized");
 }
 
-void Module_BoardComm_Send(const uint8_t *data, uint8_t len)
+void Module_BoardComm_Send(uint8_t *data, uint8_t len)
 {
     if (boardcomm_dev == NULL || data == NULL || len == 0 || len > 8)
     {

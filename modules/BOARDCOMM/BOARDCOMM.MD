@@ -40,7 +40,7 @@ void Module_BoardComm_Init(void);
 ```
 
 ```c
-void Module_BoardComm_Send(const uint8_t *data, uint8_t len);
+void Module_BoardComm_Send(uint8_t *data, uint8_t len);
 ```
 
 ```c
@@ -208,3 +208,4 @@ static void boardcomm_bsp_rx_callback(Can_Device *dev,
 |------|------|------|
 | v1.0 | 2026-05-13 | 初始版本 |
 | v1.1 | 2026-05-17 | 重构，增加RegisterRxBuffer与RegisterRx |
+| v1.1.1 | 2026-05-17 | fix:修复send函数传参 |

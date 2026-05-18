@@ -38,7 +38,7 @@ void Module_BoardComm_Init(void);
  * @param data   数据指针（最多 8 字节）
  * @param len    数据长度
  */
-void Module_BoardComm_Send(const uint8_t *data, uint8_t len);
+void Module_BoardComm_Send(uint8_t *data, uint8_t len);
 
 /**
  * @brief 注册接收回调（收到数据时由 BOARDCOMM 自动调用）
