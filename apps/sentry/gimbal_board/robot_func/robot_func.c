@@ -71,25 +71,28 @@ void RemoteControlSet(Chassis_Ctrl_Cmd_t *Chassis_Ctrl, Shoot_Ctrl_Cmd_t *Shoot_
                 Shoot_Ctrl->load_mode     = load_stop;
             }
 
-            // 发射机构控制部分（分2种遥控器）
+            // 发射机构控制部分
+            int16_t ch5 = Module_Remote_get_channel(5);
             int16_t ch7 = Module_Remote_get_channel(7);
-            if (ch7 == SBUS_CHX_UP)
+            if (ch5 == SBUS_CHX_UP)
             {
                 Shoot_Ctrl->shoot_mode    = shoot_off;
                 Shoot_Ctrl->friction_mode = friction_off;
                 Shoot_Ctrl->load_mode     = load_stop;
             }
-            else if (ch7 == SBUS_CHX_BIAS)
+            else if (ch5 == SBUS_CHX_BIAS)
             {
-                Shoot_Ctrl->shoot_mode    = shoot_off;
-                Shoot_Ctrl->friction_mode = friction_on;
+                Shoot_Ctrl->shoot_mode    = shoot_on;
+                Shoot_Ctrl->friction_mode = friction_off;
             }
-            else if (ch7 == SBUS_CHX_DOWN)
+            else if (ch5 == SBUS_CHX_DOWN)
             {
                 Shoot_Ctrl->shoot_mode    = shoot_on;
                 Shoot_Ctrl->friction_mode = friction_on;
-                if (ch7 == SBUS_CHX_BIAS)
+                if (ch7 == SBUS_CHX_UP)
                     Shoot_Ctrl->load_mode = load_1_bullet;
+                else if (ch7 == SBUS_CHX_BIAS)
+                    Shoot_Ctrl->load_mode = load_stop;
                 else if (ch7 == SBUS_CHX_DOWN)
                     Shoot_Ctrl->load_mode = load_burstfire;
             }
