@@ -5,21 +5,25 @@
 
 static void LQR_ErrorHandle(LQRInstance *lqr)
 {
-    /* 仅在输出饱和 (>90% max) 时检测, 避免正常跟随误判 */
-    if (fabsf(lqr->output) < lqr->max_out * 0.90f)
+    const float    OUTPUT_SAT_RATIO = 0.95f; /* 输出饱和阈值 */
+    const float    REF_MIN_DETECT   = 0.5f;  /* 目标过小不检测, 避免静止误判 */
+    const float    STALL_RATIO      = 0.05f; /* 实测值不到目标 5% 判定为堵转 */
+    const uint16_t STALL_COUNT      = 500;
+
+    float out_abs     = fabsf(lqr->output);
+    float ref_abs     = fabsf(lqr->ref);
+    float measure_abs = fabsf(lqr->measure);
+
+    /* 输出未饱和或者目标值过小不检测 */
+    if (out_abs < lqr->max_out * OUTPUT_SAT_RATIO || ref_abs < REF_MIN_DETECT)
     {
         lqr->blocked_count = 0;
         lqr->errortype     = LQR_ERROR_NONE;
         return;
     }
 
-    float err_abs = fabsf(lqr->ref - lqr->measure);
-
-    /* 自适应阈值: |ref| * 0.3, 下限 1.0 (rad 或 rad/s) */
-    float threshold = fabsf(lqr->ref) * 0.3f;
-    if (threshold < 1.0f) threshold = 1.0f;
-
-    if (err_abs > threshold)
+    /* 堵转判定: 期望有运动但实际几乎无响应 */
+    if (measure_abs < ref_abs * STALL_RATIO)
     {
         lqr->blocked_count++;
     }
@@ -28,7 +32,9 @@ static void LQR_ErrorHandle(LQRInstance *lqr)
         lqr->blocked_count = 0;
         lqr->errortype     = LQR_ERROR_NONE;
     }
-    if (lqr->blocked_count >= 500) lqr->errortype = LQR_MOTOR_BLOCKED_ERROR;
+
+    if (lqr->blocked_count >= STALL_COUNT) lqr->errortype = LQR_MOTOR_BLOCKED_ERROR;
+
     if (lqr->errortype == LQR_MOTOR_BLOCKED_ERROR) lqr->output = 0.0f;
 }
 
