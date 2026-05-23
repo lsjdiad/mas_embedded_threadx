@@ -41,11 +41,11 @@ static float dji_output_to_torque(const Motor_Base *m)
     switch (m->info.motor_type)
     {
     case M3508:
-        return IntegerToCurrent(-20.0f, 20.0f, -16384, 16384, (int16_t)m->controller.output) * Kt_gear;
+        return IntegerToCurrent(-20.0f, 20.0f, -16384, 16384, (int16_t)m->controller.output);
     case M2006:
-        return IntegerToCurrent(-10.0f, 10.0f, -10000, 10000, (int16_t)m->controller.output) * Kt_gear;
+        return IntegerToCurrent(-10.0f, 10.0f, -10000, 10000, (int16_t)m->controller.output);
     case GM6020_CURRENT:
-        return IntegerToCurrent(-3.0f,  3.0f,  -16384, 16384, (int16_t)m->controller.output) * Kt_gear;
+        return IntegerToCurrent(-3.0f,  3.0f,  -16384, 16384, (int16_t)m->controller.output);
     default:
         return 0.0f; /* 非 DJI 电机不参与功率控制 */
     }
