@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import json; data=json.load\\(open\\('d:/embed/mas_embedded_threadx/build/compile_commands.json'\\)\\); print\\('Directory:', data[0]['directory']\\); print\\('Total entries:', len\\(data\\)\\); entries_with_referee = [e for e in data if 'REFEREE' in e.get\\('command',''\\) or 'referee' in e.get\\('file',''\\).lower\\(\\)]; print\\('Entries with REFEREE:', len\\(entries_with_referee\\)\\); rc_entries = [e for e in data if 'robot_control.c' in e.get\\('file',''\\)]; print\\('robot_control.c entries:'\\); [print\\(' ', e['file']\\) for e in rc_entries]\")",
+      "Bash(git --no-pager log --oneline -5)",
+      "Bash(git --no-pager diff --stat HEAD)",
+      "Bash(git --no-pager diff HEAD -- .clangd .vscode/settings.json apps/config.cmake board/bsp/bsp_init.c)",
+      "Bash(git --no-pager show 6686a64 --stat)"
+    ]
+  }
+}
