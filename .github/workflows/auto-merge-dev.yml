@@ -23,6 +23,11 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # 注册 .gitattributes 里声明的 merge=ours driver。
+          # 没有这一行，threadx/** 和 utils/** 的 merge=ours 不会生效，
+          # 这两个目录仍会在合并时产生大量冲突。
+          git config merge.ours.driver true
+
           git checkout dev-systemview
 
           if git merge origin/dev -m "Auto-merge dev into dev-systemview"; then

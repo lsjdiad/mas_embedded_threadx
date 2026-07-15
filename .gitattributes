@@ -1,0 +1,11 @@
+# 合并策略：dev → dev-systemview 自动合并时使用
+#
+# threadx 与 utils 是 SystemView 专属适配，dev-systemview 分支上的版本
+# 与 dev 分支本就不同。合并 dev 时，这两个目录一律保留本分支
+# (dev-systemview) 的版本，丢弃 dev 的对应改动，避免每次合并都产生冲突。
+#
+# 注意：merge=ours 需要在执行合并的环境中注册 driver 才会生效：
+#   git config merge.ours.driver true
+# CI 里已在 auto-merge-dev.yml 中配置，本地手动合并前也需执行一次。
+threadx/** merge=ours
+utils/**   merge=ours
