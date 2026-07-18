@@ -18,7 +18,7 @@ static const Chassis_Diff_Config_s chassis_diff_config = {.decele_ratio = 16.0f,
 void chassis_init(void)
 {
     PID_Init_Config_s config = {
-        .MaxOut = 8, .IntegralLimit = 0.01, .DeadBand = 2, .Kp = 0.3, .Ki = 0, .Kd = 0.005, .Improve = 0x01}; // enable integratiaon limit
+        .MaxOut = 3, .IntegralLimit = 0.01, .DeadBand = 10, .Kp = 0.1, .Ki = 0, .Kd = 0.001, .Improve = 0x01}; // enable integratiaon limit
     PIDInit(&chassis_follow_pid, &config);
 
     Motor_Init_Config_s chassis_motor_config = {
@@ -142,8 +142,8 @@ void chassis_func(Chassis_Ctrl_Cmd_t *chassis_cmd)
             float        total_angle_rad = chassis_cmd->offset_angle * DEGREE_2_RAD;
             cos_theta                    = arm_cos_f32(total_angle_rad);
             sin_theta                    = arm_sin_f32(total_angle_rad);
-            chassis_vy                   = chassis_cmd->vx * cos_theta - chassis_cmd->vy * sin_theta;
-            chassis_vx                   = chassis_cmd->vx * sin_theta + chassis_cmd->vy * cos_theta;
+            chassis_vx                   = chassis_cmd->vx * cos_theta - chassis_cmd->vy * sin_theta;
+            chassis_vy                   = chassis_cmd->vx * sin_theta + chassis_cmd->vy * cos_theta;
 
             Chassis_Mecanum_Calc(chassis_motors, &chassis_diff_config, chassis_vx, chassis_vy, chassis_wz);
         }

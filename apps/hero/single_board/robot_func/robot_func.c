@@ -2,7 +2,7 @@
  * @Author: lsjdiad 949186291@qq.com
  * @Date: 2026-07-18 09:22:52
  * @LastEditors: lsjdiad 949186291@qq.com
- * @LastEditTime: 2026-07-18 18:32:56
+ * @LastEditTime: 2026-07-18 22:16:52
  * @FilePath: \mas_embedded_threadx\apps\hero\single_board\robot_func\robot_func.c
  * @Description:
  */
@@ -11,6 +11,22 @@
 #include <stdint.h>
 #include "hero_def.h"
 #include "user_lib.h"
+
+int16_t CalcOffsetAngle(float getyawangle)
+{
+    float offset_ecd;
+
+    const float ECD_MAX  = 8191.0f;
+    const float ECD_HALF = 4095.5f;
+
+    offset_ecd = getyawangle - YAW_CHASSIS_ALIGN_ECD;
+
+    // 归一化到最小旋转角度对应的编码器差值 ([-ECD_HALF, ECD_HALF])
+    while (offset_ecd > ECD_HALF) offset_ecd -= ECD_MAX;
+    while (offset_ecd < -ECD_HALF) offset_ecd += ECD_MAX;
+
+    return (int16_t)offset_ecd;
+}
 
 void RemoteControlSet(Gimbal_Ctrl_Cmd_t *Gimbal_Ctrl, Shoot_Ctrl_Cmd_t *Shoot_Ctrl, Chassis_Ctrl_Cmd_t *Chassis_Ctrl)
 {
@@ -71,8 +87,8 @@ void RemoteControlSet(Gimbal_Ctrl_Cmd_t *Gimbal_Ctrl, Shoot_Ctrl_Cmd_t *Shoot_Ct
         }
 
         /* 底盘控制: Ch3=vx(前后), Ch4=vy(左右), */
-        Chassis_Ctrl->vx = (float)Module_Remote_get_channel(3) / (float)(1807 - 1024);
-        Chassis_Ctrl->vy = (float)Module_Remote_get_channel(4) / (float)(1807 - 1024);
+        Chassis_Ctrl->vx = (float)Module_Remote_get_channel(4) / (float)(1807 - 1024);
+        Chassis_Ctrl->vy = (float)Module_Remote_get_channel(3) / (float)(1807 - 1024);
         // Ch8=模式 (范围容差 ±100)
         if (ch8 <= SBUS_CHX_UP + 100)
             Chassis_Ctrl->chassis_mode = chassis_follow_gimbal_yaw;

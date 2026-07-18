@@ -12,9 +12,10 @@
 #include <stdint.h>
 
 // 云台参数
-#define PITCH_MAX_ANGLE 20.0f  // 云台竖直方向最大角度
-#define PITCH_MIN_ANGLE -20.0f // 云台竖直方向最小角度
-
+#define PITCH_MAX_ANGLE       20.0f  // 云台竖直方向最大角度
+#define PITCH_MIN_ANGLE       -20.0f // 云台竖直方向最小角度
+#define YAW_CHASSIS_ALIGN_ECD         3878            // 云台和底盘对齐指向相同方向时的电机编码器值,若对云台有机械改动需要修改
+#define CHASSIS_MAX_SPEED_MPS         3.0f            // 底盘最大线速度 (m/s), 遥控满杆映射到此速度
 #pragma pack(1)
 // 云台
 typedef enum

@@ -11,4 +11,6 @@
  */
 void RemoteControlSet(Gimbal_Ctrl_Cmd_t *Gimbal_Ctrl, Shoot_Ctrl_Cmd_t *Shoot_Ctrl, Chassis_Ctrl_Cmd_t *Chassis_Ctrl);
 
+int16_t CalcOffsetAngle(float getyawangle);
+
 #endif // _ROBOT_FUNC_H_

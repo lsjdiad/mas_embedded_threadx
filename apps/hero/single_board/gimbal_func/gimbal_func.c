@@ -2,7 +2,7 @@
  * @Author: lsjdiad 949186291@qq.com
  * @Date: 2026-07-17 18:45:02
  * @LastEditors: lsjdiad 949186291@qq.com
- * @LastEditTime: 2026-07-18 17:47:36
+ * @LastEditTime: 2026-07-18 20:21:02
  * @FilePath: \mas_embedded_threadx\apps\hero\single_board\gimbal_func\gimbal_func.c
  * @Description:
  */
@@ -21,7 +21,7 @@
 static DJI_Motor_t           *yaw_motor   = NULL; // yaw电机指针
 const static Bmi088_device_t *bmi088_dev  = NULL;
 static DM_Motor_t            *pitch_motor = NULL;
-static const Ins_t            *ins         = NULL; // INS 姿态数据
+static const Ins_t           *ins         = NULL; // INS 姿态数据
 
 /* Ozone 调试: gimbal_init 进度
  * 0=未开始  1=BMI088 OK  2=yaw 已注册  3=pitch 已注册  4=完成 */
@@ -58,7 +58,7 @@ void gimbal_init(void)
             },
         .controller_init_config =
             {
-                .other_angle_feedback_ptr = NULL,
+                .other_angle_feedback_ptr = &ins->YawTotalAngle_rad,
                 .other_speed_feedback_ptr = &bmi088_dev->gyro[2],
                 .angle_PID =
                     {
@@ -81,7 +81,7 @@ void gimbal_init(void)
             {
                 .algorithm_type        = CONTROL_PID,
                 .feedback_reverse_flag = 0,
-                .angle_feedback_source = 0,
+                .angle_feedback_source = 1,
                 .speed_feedback_source = 1,
                 .loop_type             = ANGLE_AND_SPEED_LOOP,
             },
@@ -155,15 +155,6 @@ float gimbal_get_yaw_angle_deg(void)
     return yaw_motor->base.measure.total_angle * RAD_2_DEGREE;
 }
 
-float gimbal_get_yaw_normalized_deg(void)
-{
-    if (yaw_motor == NULL) return 0.0f;
-    float angle = yaw_motor->base.measure.single_round_angle * RAD_2_DEGREE;
-    /* 归一化到 [-180, 180] 度 */
-    if (angle > 180.0f) angle -= 360.0f;
-    return angle;
-}
-
 void gimbal_func(Gimbal_Ctrl_Cmd_t *gimbal_cmd, uint16_t *yaw_ecd)
 {
     if (gimbal_cmd != NULL)
@@ -191,5 +182,9 @@ void gimbal_func(Gimbal_Ctrl_Cmd_t *gimbal_cmd, uint16_t *yaw_ecd)
             Motor_DJI_Stop(yaw_motor);
             Motor_DM_Stop(pitch_motor);
         }
+    }
+    if (!Module_Offline_get_device_status(yaw_motor->base.offline_dev) && yaw_ecd != NULL)
+    {
+        *yaw_ecd = yaw_motor->measure.ecd;
     }
 };
