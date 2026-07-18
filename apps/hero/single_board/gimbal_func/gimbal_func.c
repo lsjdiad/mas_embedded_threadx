@@ -155,6 +155,15 @@ float gimbal_get_yaw_angle_deg(void)
     return yaw_motor->base.measure.total_angle * RAD_2_DEGREE;
 }
 
+float gimbal_get_yaw_normalized_deg(void)
+{
+    if (yaw_motor == NULL) return 0.0f;
+    float angle = yaw_motor->base.measure.single_round_angle * RAD_2_DEGREE;
+    /* 归一化到 [-180, 180] 度 */
+    if (angle > 180.0f) angle -= 360.0f;
+    return angle;
+}
+
 void gimbal_func(Gimbal_Ctrl_Cmd_t *gimbal_cmd, uint16_t *yaw_ecd)
 {
     if (gimbal_cmd != NULL)

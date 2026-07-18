@@ -37,8 +37,8 @@ static void robot_control_task(ULONG thread_input)
         /* 遥控器控制输入 */
         RemoteControlSet(&gimbal_cmd, &shoot_cmd, &chassis_cmd);
 
-        /* 底盘跟随云台: offset_angle = yaw电机当前角度(°) */
-        chassis_cmd.offset_angle = gimbal_get_yaw_angle_deg();
+        /* 底盘跟随云台: offset_angle = yaw电机归一化角度(°), ±180° */
+        chassis_cmd.offset_angle = gimbal_get_yaw_normalized_deg();
 
         /* 云台控制 */
         gimbal_func(&gimbal_cmd, NULL);
