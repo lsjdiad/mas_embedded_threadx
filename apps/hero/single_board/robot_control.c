@@ -2,7 +2,7 @@
  * @Author: lsjdiad 949186291@qq.com
  * @Date: 2026-07-18 09:53:09
  * @LastEditors: lsjdiad 949186291@qq.com
- * @LastEditTime: 2026-07-18 15:21:40
+ * @LastEditTime: 2026-07-18 16:46:49
  * @FilePath: \mas_embedded_threadx\apps\hero\single_board\robot_control.c
  * @Description:
  */
@@ -12,6 +12,7 @@
 #include "shoot_func.h"
 #include "chassis_func.h"
 #include "robot_func.h"
+#include "module_ins.h"
 #include "tx_api.h"
 #include "bsp_def.h"
 
@@ -54,6 +55,7 @@ static void robot_control_task(ULONG thread_input)
 
 void robot_control_init(void)
 {
+    Module_INS_Init();
     gimbal_init();
     shoot_init();
     chassis_init();

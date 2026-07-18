@@ -18,7 +18,7 @@ static const Chassis_Diff_Config_s chassis_diff_config = {.decele_ratio = 16.0f,
 void chassis_init(void)
 {
     PID_Init_Config_s config = {
-        .MaxOut = 5, .IntegralLimit = 0.01, .DeadBand = 10, .Kp = 0.1, .Ki = 0, .Kd = 0.001, .Improve = 0x01}; // enable integratiaon limit
+        .MaxOut = 8, .IntegralLimit = 0.01, .DeadBand = 2, .Kp = 0.3, .Ki = 0, .Kd = 0.005, .Improve = 0x01}; // enable integratiaon limit
     PIDInit(&chassis_follow_pid, &config);
 
     Motor_Init_Config_s chassis_motor_config = {

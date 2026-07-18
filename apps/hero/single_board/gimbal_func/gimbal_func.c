@@ -2,12 +2,13 @@
  * @Author: lsjdiad 949186291@qq.com
  * @Date: 2026-07-17 18:45:02
  * @LastEditors: lsjdiad 949186291@qq.com
- * @LastEditTime: 2026-07-18 16:22:29
+ * @LastEditTime: 2026-07-18 17:47:36
  * @FilePath: \mas_embedded_threadx\apps\hero\single_board\gimbal_func\gimbal_func.c
  * @Description:
  */
 #include "gimbal_func.h"
 #include "module_bmi088.h"
+#include "module_ins.h"
 #include "motor_dji.h"
 #include "motor_damiao.h"
 #include "user_lib.h"
@@ -20,6 +21,7 @@
 static DJI_Motor_t           *yaw_motor   = NULL; // yaw电机指针
 const static Bmi088_device_t *bmi088_dev  = NULL;
 static DM_Motor_t            *pitch_motor = NULL;
+static const Ins_t            *ins         = NULL; // INS 姿态数据
 
 /* Ozone 调试: gimbal_init 进度
  * 0=未开始  1=BMI088 OK  2=yaw 已注册  3=pitch 已注册  4=完成 */
@@ -31,6 +33,12 @@ void gimbal_init(void)
     if (bmi088_dev == NULL)
     {
         LOG_E("bmi088_dev is null");
+        return;
+    }
+    ins = Module_INS_get();
+    if (ins == NULL)
+    {
+        LOG_E("ins is null");
         return;
     }
     dbg_gimbal_step                = 1; /* BMI088 OK */
@@ -62,7 +70,7 @@ void gimbal_init(void)
                     },
                 .speed_PID =
                     {
-                        .Kp       = 0.06f,
+                        .Kp       = 0.6f,
                         .Ki       = 0.0f,
                         .Kd       = 0.0f,
                         .MaxOut   = 2.223f, /* 速度环输出限幅 = 最大扭矩 (Nm) */
@@ -102,7 +110,7 @@ void gimbal_init(void)
                                             },
                                         .controller_init_config =
                                             {
-                                                .other_angle_feedback_ptr = NULL,
+                                                .other_angle_feedback_ptr = &ins->euler_rad[1],
                                                 .other_speed_feedback_ptr = &bmi088_dev->gyro[0], // c板的pitch轴角速度，根据实际选择对应角速度
                                                 .angle_PID =
                                                     {
@@ -114,7 +122,7 @@ void gimbal_init(void)
                                                     },
                                                 .speed_PID =
                                                     {
-                                                        .Kp       = 0.06f,
+                                                        .Kp       = 0.6f,
                                                         .Ki       = 0.0f,
                                                         .Kd       = 0.0f,
                                                         .MaxOut   = 5.0f, /* 速度环输出限幅 = 最大扭矩 (Nm) */
@@ -124,8 +132,8 @@ void gimbal_init(void)
                                         .setting_init_config =
                                             {
                                                 .algorithm_type        = CONTROL_PID,
-                                                .feedback_reverse_flag = 0,
-                                                .angle_feedback_source = 0,
+                                                .feedback_reverse_flag = 1,
+                                                .angle_feedback_source = 1,
                                                 .speed_feedback_source = 1,
                                                 .loop_type             = ANGLE_AND_SPEED_LOOP,
                                             },
@@ -163,7 +171,6 @@ void gimbal_func(Gimbal_Ctrl_Cmd_t *gimbal_cmd, uint16_t *yaw_ecd)
                 Motor_DJI_Start(yaw_motor);
                 Motor_DM_Start(pitch_motor);
                 Motor_DJI_SetRef(yaw_motor, gimbal_cmd->yaw * DEGREE_2_RAD);
-                /* 减速比补偿: ref 从输出弧度 → 电机弧度，与 total_angle 对齐 */
                 Motor_DM_SetRef(pitch_motor, gimbal_cmd->pitch * DEGREE_2_RAD);
                 break;
             case gimbal_auto_mode:

@@ -2,7 +2,7 @@
  * @Author: lsjdiad 949186291@qq.com
  * @Date: 2026-07-18 09:22:52
  * @LastEditors: lsjdiad 949186291@qq.com
- * @LastEditTime: 2026-07-18 14:51:16
+ * @LastEditTime: 2026-07-18 18:00:26
  * @FilePath: \mas_embedded_threadx\apps\hero\single_board\robot_func\robot_func.c
  * @Description:
  */
@@ -30,8 +30,8 @@ void RemoteControlSet(Gimbal_Ctrl_Cmd_t *Gimbal_Ctrl, Shoot_Ctrl_Cmd_t *Shoot_Ct
         if (ch5 <= SBUS_CHX_UP + 100)
         {
             Gimbal_Ctrl->gimbal_mode = gimbal_gyro_mode;
-            Gimbal_Ctrl->yaw -= 0.001f * (float)Module_Remote_get_channel(1);
-            Gimbal_Ctrl->pitch += 0.001f * (float)Module_Remote_get_channel(2);
+            Gimbal_Ctrl->yaw -= 0.0001f * (float)Module_Remote_get_channel(1);
+            Gimbal_Ctrl->pitch += 0.0001f * (float)Module_Remote_get_channel(2);
             VAL_LIMIT(Gimbal_Ctrl->pitch, PITCH_MIN_ANGLE, PITCH_MAX_ANGLE);
         }
         else if (ch5 >= SBUS_CHX_DOWN - 100)
