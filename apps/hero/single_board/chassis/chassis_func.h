@@ -4,6 +4,7 @@
 #include "hero_def.h"
 
 void chassis_init(void);
+
 void chassis_func(Chassis_Ctrl_Cmd_t *chassis_cmd);
 
-#endif
+#endif // _CHASSIS_FUNC_H_

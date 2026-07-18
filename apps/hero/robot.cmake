@@ -1,4 +1,5 @@
 include(${CMAKE_CURRENT_LIST_DIR}/../../modules/module_config.cmake)
-set(MODULES_SINGLE   OFFLINE REMOTE MOTOR)
+set(MODULES_SINGLE   OFFLINE REMOTE MOTOR BMI088 INS)
+set(REMOTE_VT_SOURCE        0)
 set(OFFLINE_BEEP_ENABLE     0)
 set(REMOTE_SOURCE           1) 
