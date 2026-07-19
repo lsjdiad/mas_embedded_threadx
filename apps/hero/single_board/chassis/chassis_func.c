@@ -60,7 +60,7 @@ void chassis_init(void)
     }
 
     chassis_motor_config.transport_config.can.tx_id             = 2;
-    chassis_motor_config.setting_init_config.motor_reverse_flag = 0;
+    chassis_motor_config.setting_init_config.motor_reverse_flag = 1;
     chassis_motor_config.offline_init_config.name               = "m3508_2";
     chassis_motor_config.offline_init_config.beep_times         = 2;
     chassis_motors[1]                                           = Motor_DJI_Init(&chassis_motor_config);
@@ -82,7 +82,7 @@ void chassis_init(void)
     }
 
     chassis_motor_config.transport_config.can.tx_id             = 4;
-    chassis_motor_config.setting_init_config.motor_reverse_flag = 1;
+    chassis_motor_config.setting_init_config.motor_reverse_flag = 0;
     chassis_motor_config.offline_init_config.name               = "m3508_4";
     chassis_motor_config.offline_init_config.beep_times         = 4;
     chassis_motors[3]                                           = Motor_DJI_Init(&chassis_motor_config);
@@ -104,7 +104,7 @@ void chassis_func(Chassis_Ctrl_Cmd_t *chassis_cmd)
             !Module_Offline_get_device_status(chassis_motors[2]->base.offline_dev) &&
             !Module_Offline_get_device_status(chassis_motors[3]->base.offline_dev))
         {
-            if (chassis_cmd->chassis_mode == chassis_zero_force)
+            if (chassis_cmd->chassis_mode == chassis_zero_force && chassis_cmd->chassis_mode != chassis_false)
             {
                 Motor_DJI_Stop(chassis_motors[0]);
                 Motor_DJI_Stop(chassis_motors[1]);
@@ -129,8 +129,12 @@ void chassis_func(Chassis_Ctrl_Cmd_t *chassis_cmd)
                 PIDCalculate(&chassis_follow_pid, chassis_cmd->offset_angle, 0);
                 chassis_wz = chassis_follow_pid.Output;
                 break;
-            case chassis_rotate: // 自旋,同时保持全向机动
-                chassis_wz = 3;
+            case chassis_false: // 无底盘旋转
+                chassis_wz = 0;
+                Motor_DJI_Stop(chassis_motors[0]);
+                Motor_DJI_Stop(chassis_motors[1]);
+                Motor_DJI_Stop(chassis_motors[2]);
+                Motor_DJI_Stop(chassis_motors[3]);
                 break;
             default:
                 break;

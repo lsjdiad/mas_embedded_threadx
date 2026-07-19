@@ -14,8 +14,8 @@
 // 云台参数
 #define PITCH_MAX_ANGLE       20.0f  // 云台竖直方向最大角度
 #define PITCH_MIN_ANGLE       -20.0f // 云台竖直方向最小角度
-#define YAW_CHASSIS_ALIGN_ECD         3878            // 云台和底盘对齐指向相同方向时的电机编码器值,若对云台有机械改动需要修改
-#define CHASSIS_MAX_SPEED_MPS         3.0f            // 底盘最大线速度 (m/s), 遥控满杆映射到此速度
+#define YAW_CHASSIS_ALIGN_ECD 3878   // 云台和底盘对齐指向相同方向时的电机编码器值,若对云台有机械改动需要修改
+#define CHASSIS_MAX_SPEED_MPS 3.0f   // 底盘最大线速度 (m/s), 遥控满杆映射到此速度
 #pragma pack(1)
 // 云台
 typedef enum
@@ -62,7 +62,7 @@ typedef enum
 {
     chassis_zero_force = 0,    /* 底盘停止模式 */
     chassis_follow_gimbal_yaw, /* 跟随云台模式 */
-    chassis_rotate,            /* 旋转 */
+    chassis_false,             /* 无底盘旋转 */
     chassis_rotate_reverse,    /* 旋转反向 */
 } chassis_mode_e;
 
