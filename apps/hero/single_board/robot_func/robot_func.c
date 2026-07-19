@@ -2,7 +2,7 @@
  * @Author: lsjdiad 949186291@qq.com
  * @Date: 2026-07-18 09:22:52
  * @LastEditors: lsjdiad 949186291@qq.com
- * @LastEditTime: 2026-07-19 10:48:05
+ * @LastEditTime: 2026-07-19 15:02:40
  * @FilePath: \mas_embedded_threadx\apps\hero\single_board\robot_func\robot_func.c
  * @Description:
  */
@@ -87,7 +87,7 @@ void RemoteControlSet(Gimbal_Ctrl_Cmd_t *Gimbal_Ctrl, Shoot_Ctrl_Cmd_t *Shoot_Ct
         }
 
         /* 底盘控制: Ch3=vx(前后), Ch4=vy(左右), */
-        Chassis_Ctrl->vx = (float)Module_Remote_get_channel(3) / (float)(1807 - 1024);
+        Chassis_Ctrl->vx = -(float)Module_Remote_get_channel(3) / (float)(1807 - 1024);
         Chassis_Ctrl->vy = (float)Module_Remote_get_channel(4) / (float)(1807 - 1024);
         // Ch8=模式 (范围容差 ±100)
         if (ch8 <= SBUS_CHX_UP + 100)

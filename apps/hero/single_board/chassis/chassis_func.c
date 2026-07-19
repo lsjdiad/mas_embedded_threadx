@@ -52,10 +52,10 @@ void chassis_init(void)
     chassis_motor_config.setting_init_config.motor_reverse_flag = 0;
     chassis_motor_config.offline_init_config.name               = "m3508_1";
     chassis_motor_config.offline_init_config.beep_times         = 1;
-    chassis_motors[0]                                           = Motor_DJI_Init(&chassis_motor_config);
-    if (chassis_motors[0] == NULL)
+    chassis_motors[3]                                           = Motor_DJI_Init(&chassis_motor_config);
+    if (chassis_motors[3] == NULL)
     {
-        LOG_E("chassis motor[0] init failed");
+        LOG_E("chassis motor[3] init failed");
         return;
     }
 
@@ -63,8 +63,8 @@ void chassis_init(void)
     chassis_motor_config.setting_init_config.motor_reverse_flag = 1;
     chassis_motor_config.offline_init_config.name               = "m3508_2";
     chassis_motor_config.offline_init_config.beep_times         = 2;
-    chassis_motors[1]                                           = Motor_DJI_Init(&chassis_motor_config);
-    if (chassis_motors[1] == NULL)
+    chassis_motors[0]                                           = Motor_DJI_Init(&chassis_motor_config);
+    if (chassis_motors[0] == NULL)
     {
         LOG_E("chassis motor[1] init failed");
         return;
@@ -74,8 +74,8 @@ void chassis_init(void)
     chassis_motor_config.setting_init_config.motor_reverse_flag = 1;
     chassis_motor_config.offline_init_config.name               = "m3508_3";
     chassis_motor_config.offline_init_config.beep_times         = 3;
-    chassis_motors[2]                                           = Motor_DJI_Init(&chassis_motor_config);
-    if (chassis_motors[2] == NULL)
+    chassis_motors[1]                                           = Motor_DJI_Init(&chassis_motor_config);
+    if (chassis_motors[1] == NULL)
     {
         LOG_E("chassis motor[2] init failed");
         return;
@@ -85,8 +85,8 @@ void chassis_init(void)
     chassis_motor_config.setting_init_config.motor_reverse_flag = 0;
     chassis_motor_config.offline_init_config.name               = "m3508_4";
     chassis_motor_config.offline_init_config.beep_times         = 4;
-    chassis_motors[3]                                           = Motor_DJI_Init(&chassis_motor_config);
-    if (chassis_motors[3] == NULL)
+    chassis_motors[2]                                           = Motor_DJI_Init(&chassis_motor_config);
+    if (chassis_motors[2] == NULL)
     {
         LOG_E("chassis motor[3] init failed");
         return;
