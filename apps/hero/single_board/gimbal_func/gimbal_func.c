@@ -2,7 +2,7 @@
  * @Author: lsjdiad 949186291@qq.com
  * @Date: 2026-07-17 18:45:02
  * @LastEditors: lsjdiad 949186291@qq.com
- * @LastEditTime: 2026-07-18 20:21:02
+ * @LastEditTime: 2026-07-20 10:07:27
  * @FilePath: \mas_embedded_threadx\apps\hero\single_board\gimbal_func\gimbal_func.c
  * @Description:
  */
@@ -56,34 +56,20 @@ void gimbal_init(void)
                 .hcan  = BSP_CAN_HANDLE1,
                 .tx_id = 1,
             },
-        .controller_init_config =
-            {
-                .other_angle_feedback_ptr = &ins->YawTotalAngle_rad,
-                .other_speed_feedback_ptr = &bmi088_dev->gyro[2],
-                .angle_PID =
-                    {
-                        .Kp       = 9.0f,
-                        .Ki       = 0.0f,
-                        .Kd       = 0.0f,
-                        .MaxOut   = 12.0f, /* 位置环输出限幅 = 速度给定上限 (rad/s) */
-                        .DeadBand = 0.01f,
-                    },
-                .speed_PID =
-                    {
-                        .Kp       = 0.6f,
-                        .Ki       = 0.0f,
-                        .Kd       = 0.0f,
-                        .MaxOut   = 2.223f, /* 速度环输出限幅 = 最大扭矩 (Nm) */
-                        .DeadBand = 0.01f,
-                    },
-            },
+        .controller_init_config = {.other_angle_feedback_ptr = &ins->YawTotalAngle_rad,
+                                   .other_speed_feedback_ptr = &bmi088_dev->gyro[2],
+                                   .lqr_init =
+                                       {
+                                           .K         = {6.071f, 0.351f},
+                                           .state_dim = 2,
+                                       }},
         .setting_init_config =
             {
-                .algorithm_type        = CONTROL_PID,
+                .algorithm_type        = CONTROL_LQR,
                 .feedback_reverse_flag = 0,
                 .angle_feedback_source = 1,
                 .speed_feedback_source = 1,
-                .loop_type             = ANGLE_AND_SPEED_LOOP,
+                .loop_type             = ANGLE_LOOP,
             },
         .motor_init_info = {
             .motor_type = GM6020_CURRENT, .gear_ratio = 1 /*减速比*/, .max_torque = 2.223f /*最大输出扭矩*/, .torque_constant = 0.741f /*力矩常数*/}};
@@ -112,30 +98,19 @@ void gimbal_init(void)
                                             {
                                                 .other_angle_feedback_ptr = &ins->euler_rad[1],
                                                 .other_speed_feedback_ptr = &bmi088_dev->gyro[0], // c板的pitch轴角速度，根据实际选择对应角速度
-                                                .angle_PID =
+                                                .lqr_init =
                                                     {
-                                                        .Kp       = 9.0f,
-                                                        .Ki       = 0.0f,
-                                                        .Kd       = 0.0f,
-                                                        .MaxOut   = 12.0f, /* 位置环输出限幅 = 速度给定上限 (rad/s) */
-                                                        .DeadBand = 0.01f,
-                                                    },
-                                                .speed_PID =
-                                                    {
-                                                        .Kp       = 0.6f,
-                                                        .Ki       = 0.0f,
-                                                        .Kd       = 0.0f,
-                                                        .MaxOut   = 5.0f, /* 速度环输出限幅 = 最大扭矩 (Nm) */
-                                                        .DeadBand = 0.01f,
+                                                        .K         = {9.071f, 0.755f}, // 28.7312f,2.5974f
+                                                        .state_dim = 2,
                                                     },
                                             },
                                         .setting_init_config =
                                             {
-                                                .algorithm_type        = CONTROL_PID,
+                                                .algorithm_type        = CONTROL_LQR,
                                                 .feedback_reverse_flag = 1,
                                                 .angle_feedback_source = 1,
                                                 .speed_feedback_source = 1,
-                                                .loop_type             = ANGLE_AND_SPEED_LOOP,
+                                                .loop_type             = ANGLE_LOOP,
                                             },
                                         .motor_init_info = {.motor_type = DM4310, .gear_ratio = 10, .max_torque = 10, .torque_constant = 0.093f}};
     pitch_motor                      = Motor_DM_Init(&pitch_config, DM_MIT_MODE);
